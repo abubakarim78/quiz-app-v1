@@ -1,5 +1,4 @@
 // List of arrays of questions for the app
-
 const questions = [
   {
     question: "What does HTML stand for?",
@@ -30,8 +29,8 @@ const questions = [
   },
 ];
 
-// First let get our elements from the Homepage
-
+// First let's get our elements from the Homepage
+const titleElement = document.querySelector(".title");
 const questionContainer = document.getElementById("question-container");
 const questionEl = document.getElementById("question");
 const answerButtons = document.getElementById("answer-container");
@@ -40,12 +39,38 @@ const resultElement = document.getElementById("result");
 
 let score = 0;
 let currentQuestionIndex = 0;
+let currentQuestions = [];
 
-// funtion to start the Quiz
+// Fisher-Yates shuffle algorithm for randomizing arrays
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// function to start the Quiz
 function startQuiz() {
   score = 0;
   currentQuestionIndex = 0;
   resultElement.textContent = "";
+  questionContainer.style.display = "block";
+  titleElement.style.display = "block"; // Show title when quiz starts
+  nextButton.textContent = "Next";
+  
+  // Create a deep copy of the questions array so we don't modify the original
+  const questionsCopy = JSON.parse(JSON.stringify(questions));
+  
+  // Randomize the order of questions
+  shuffleArray(questionsCopy);
+  
+  // Randomize the order of answer options for each question
+  questionsCopy.forEach(question => shuffleArray(question.answers));
+  
+  // Replace the current questions with the randomized ones
+  currentQuestions = questionsCopy;
+  
   showQuestion();
 }
 
@@ -53,46 +78,40 @@ function startQuiz() {
 function showQuestion() {
   cancelPrev();
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentQuestion = currentQuestions[currentQuestionIndex];
   questionEl.textContent = currentQuestion.question;
 
   currentQuestion.answers.forEach((answer) => {
-
     const button = document.createElement("button");
-
     button.textContent = answer.option;
-
     button.classList.add("optionBtns");
-
     answerButtons.appendChild(button);
 
     button.addEventListener("click", function () {
-      const disabled = document.getElementsByClassName("optionBtns");
       evaluateOption(answer.correct);
     });
   });
 }
 
-// funtion to evaluate which the among the options
+// function to evaluate which among the options
 function evaluateOption(param) {
   if (param === true) {
     score++;
   }
 
   // defining which answer is correct 
-
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentQuestion = currentQuestions[currentQuestionIndex];
   const isCorrect = currentQuestion.answers.find(
     (item) => item.correct === true
   );
 
   const correctAnswerText = isCorrect.option;
 
-  // funtion to disable all buttons after a click on any options
+  // function to disable all buttons after a click on any options
   for (let btn of answerButtons.children) {
     btn.disabled = true;
 
-    // funtion to provide background colors to options once an answer is chosen
+    // function to provide background colors to options once an answer is chosen
     if (btn.textContent === correctAnswerText && param) {
       btn.style.backgroundColor = "green";
     } else {
@@ -102,42 +121,47 @@ function evaluateOption(param) {
   nextButton.style.display = "inline-block";
 }
 
-// Funtion to display the next Button once an answer is clicked
+// Function to display the next Button once an answer is clicked
 nextButton.addEventListener("click", function () {
+  // Check if we're in "Try Again" mode
+  if (nextButton.textContent === "Try Again") {
+    // Reset the quiz and start over'
+    nextButton.style.display = "none";
+    startQuiz();
+    return;
+  }
 
   nextButton.style.display = "none";
   currentQuestionIndex++;
   
-  
-  // Displaying the Well done and Try Again Button 
-  if (currentQuestionIndex === questions.length) {
-    
-    if (score === questions.length) {
-      questionContainer.textContent = "Well Done";
-    } else {
-      questionContainer.style.display = "none";
-      nextButton.style.display = "inline-block";
-      nextButton.textContent = "Try Again";
-    startQuiz();
-
-    } 
-
+  // Check if quiz is complete
+  if (currentQuestionIndex === currentQuestions.length) {
     showResult();
-
-// funtion to display final results after quiz is over
-    function showResult() {
-      questionContainer.style.display = "none";
-      resultElement.textContent = `Your Score is ${score} out of ${questions.length}`;
-    }
+  } else {
+    showQuestion();
   }
-  showQuestion();
 });
 
+// function to display final results after quiz is over
+function showResult() {
+  titleElement.style.display = "none"; // Hide the title when showing results
+  questionContainer.style.display = "none";
+  resultElement.textContent = `Your Score is ${score} out of ${currentQuestions.length}`;
+  
+  // Show appropriate message based on score
+  if (score === questions.length) {
+    questionContainer.style.display = "block";
+    questionContainer.textContent = "Well Done!";
+  } else {
+    nextButton.style.display = "inline-block";
+    nextButton.textContent = "Try Again";
+  }
+}
 
 // function to cancel previous question and display the next question
 function cancelPrev() {
   answerButtons.innerHTML = "";
-  
 }
 
+// Start the quiz when the page loads
 startQuiz();

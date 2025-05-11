@@ -10,7 +10,7 @@ body {
     align-items: center;
     border: 2px black solid;
     height: 100vh;
-    background-color: #ccc;
+    background-color: #bedca7f0;
 }
 
 .main-container {
@@ -18,17 +18,17 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: rgba(189, 215, 240, 0.967);
     padding: 20px;
     width: 90%;
     max-width: 500px;
     border-radius: 10px;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(214, 74, 14, 0.5);
 }
 
 
 button {
-    background-color: slateblue;
+    background-color: rgb(27, 196, 134);
     color: white;
     padding: 10px 30px;
     margin-top: 20px;
@@ -40,7 +40,7 @@ button {
 }
 
 button:hover {
-    background-color: black;
+    background-color: rgb(36, 22, 235);
     animation: ease-in-out;
     transition:ease-in-out;
 }
@@ -52,7 +52,7 @@ button:hover {
 }
 
 .title {
-    margin-bottom: 24px;
+    margin-bottom: 10px;
 }
 
 .optionBtns {
@@ -65,6 +65,6 @@ button:hover {
 }
 
 .optionBtns:hover {
-    background-color: azure;
-    color:blue;
+    background-color: rgb(237, 243, 246);
+    color:rgb(14, 6, 255);
 }
