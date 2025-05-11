@@ -10,7 +10,7 @@ body {
     align-items: center;
     border: 2px black solid;
     height: 100vh;
-    background-color: #bedca7f0;
+    background-color: #1ae7eb7e;
 }
 
 .main-container {
@@ -18,7 +18,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgba(189, 215, 240, 0.967);
+    background-color: rgb(232, 251, 232);
     padding: 20px;
     width: 90%;
     max-width: 500px;
@@ -56,7 +56,7 @@ button:hover {
 }
 
 .optionBtns {
-    background-color: rgba(38, 126, 194, 0.31);
+    background-color: #1ae7eb7e;
     color: black;
     display: block;
     font-size: 16px;
